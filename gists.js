@@ -17,18 +17,23 @@ function getGists() {
 function createGistList(gArray) {
 
 	var div = document.getElementById('output');
-
+	div.innerHTML = '';
 	for(var i = 0; i < gArray.length; i++) {
-		console.log(gArray[i].description);
+
 		var ul = document.createElement("ul");
 		var li = document.createElement("li");
 		var a = document.createElement("a");
 		var link = gArray[i].url;
 		a.setAttribute("href", link);
+
+		if(!gArray[i].description) {
+			a.innerHTML = "No description";
+		}
+		else
 		a.innerHTML = gArray[i].description;
 
-		li.innerHTML = a;
-		li.appendChild(ul);
-		div.innerHTML = ul;
+		li.appendChild(a);
+		ul.appendChild(li);
+		div.appendChild(ul);
 		}
 }
