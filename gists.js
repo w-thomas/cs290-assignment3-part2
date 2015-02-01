@@ -9,7 +9,7 @@ function getGists() {
 			var results = JSON.parse(this.responseText)
 			/*Create list of results*/
 			createGistList(results);
-			favButtons();
+			favButtons(0);
 		}
 	};
 	req.open('GET', 'https://api.github.com/gists');
@@ -40,8 +40,8 @@ function createGistList(gArray) {
 		}
 }
 
-/*Status is an integer used to determine whether the button should say
-add or remove from favorites, depending on what list the item is on*/
+/*Status is an integer, if 0 the item is generated to search results
+  if 1 the item is generated to favorites list*/
 function favButtons(status) {
 	var outDiv = document.getElementById("output");
 	var temp = outDiv.getElementsByTagName("ul");
@@ -49,18 +49,29 @@ function favButtons(status) {
 	for(var i = 0; i < temp.length; i++) {
 		var li = document.createElement("li");
 		var but = document.createElement("BUTTON");
-		but.setAttribute("onclick", "favoriteSwap(this)");
-
+		
+		/*button gets different properites if it in favorites or now*/
 		if(status == 0) {
+			but.setAttribute("onclick", "favoriteSwap(this, 0)");
 			var t = document.createTextNode("Save to Favorites");
 		} 
 		else {
+			but.setAttribute("onclick", "favoriteSwap(this, 1)");
 			var t = document.createTextNode("Remove from Favorites");
 		}
+
 		but.appendChild(t);
-		li.appendChild(but);
+		// li.appendChild(but);
 		console.log(li);
-		temp[i].appendChild(li);
+		temp[i].getElementsByTagName("li")[0].appendChild(but);
 	}
 }
 
+/*elem is the element being passed in. Direction is 0 if item is being saved
+  and 1 if item is being deleted from favorites*/
+function favoriteSwap(elem, direction) {
+	if(direction == 0) {
+		var parent = elem.parentNode;
+       	parent.parentNode.removeChild(parent);
+	}
+}
