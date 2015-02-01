@@ -44,29 +44,38 @@ function createGistList(gArray) {
 
 /*Status is an integer, if 0 the item is generated to search results
   if 1 the item is generated to favorites list*/
-function favButtons(status) {
+function favButtons(status) {	
+	/*button gets different properites if it in favorites or now*/
+	var temp;
+	if(status == 0) {
 		var outDiv = document.getElementById("output");
 		var temp = outDiv.getElementsByTagName("ul");
+
+		/*Create button and append to each item*/
+		for(var i = 0; i < temp.length; i++) {
+			var li = document.createElement("li");
+			var but = document.createElement("BUTTON");
+			but.style.marginLeft = '15px';
+			but.setAttribute("onclick", "favoriteSwap(this, 0)");
+			var t = document.createTextNode("Save to Favorites");
+			but.appendChild(t);
+			temp[i].getElementsByTagName("li")[0].appendChild(but);
+		}
+	} 
+	else {
+		var outDiv = document.getElementById("output");
+		temp = outDiv.getElementsByTagName("ul");
 
 		for(var i = 0; i < temp.length; i++) {
 		var li = document.createElement("li");
 		var but = document.createElement("BUTTON");
-		
-		/*button gets different properites if it in favorites or now*/
-		if(status == 0) {
-			//but.setAttribute("onclick", "favoriteSwap(this, 0)");
-			but.setAttribute("onclick", "favoriteSwap(this, 0)");
-			var t = document.createTextNode("Save to Favorites");
-		} 
-		else {
-			but.setAttribute("onclick", "favoriteSwap(this, 1)");
-			var t = document.createTextNode("Remove from Favorites");
-		}
-
+		but.setAttribute("onclick", "favoriteSwap(this, 1)");
+		var t = document.createTextNode("Remove from Favorites");
 		but.appendChild(t);
-		// li.appendChild(but);
 		temp[i].getElementsByTagName("li")[0].appendChild(but);
+		}
 	}
+
 }
 
 /*elem is the element being passed in. Direction is 0 if item is being saved
