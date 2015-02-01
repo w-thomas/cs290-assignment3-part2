@@ -76,12 +76,18 @@ function favoriteSwap(elem, direction) {
 		var parent = elem.parentNode;
        	var temp = parent.parentNode.removeChild(parent);
        	var url = temp.getElementsByTagName("a")[0].href;
-       	saveLink(url);
+       	var anchorText = temp.getElementsByTagName("a")[0].innerHTML;
+       	var params = new CreateLink(url, anchorText);
+       	saveLink(params);
 	}
 }
 
+function CreateLink(url, description) {
+	this.url = url;
+	this.innerText = description;
+}
 
-
+/*I borrowed ideas in these functions from the lectures*/
 function saveLink(link) {
 	console.log(link);
 	userFavorites.gistLinks.push(link);
