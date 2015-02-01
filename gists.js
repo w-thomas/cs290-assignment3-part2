@@ -62,7 +62,6 @@ function favButtons(status) {
 
 		but.appendChild(t);
 		// li.appendChild(but);
-		console.log(li);
 		temp[i].getElementsByTagName("li")[0].appendChild(but);
 	}
 }
@@ -71,7 +70,9 @@ function favButtons(status) {
   and 1 if item is being deleted from favorites*/
 function favoriteSwap(elem, direction) {
 	if(direction == 0) {
+		console.log(elem);
 		var parent = elem.parentNode;
-       	parent.parentNode.removeChild(parent);
+       	var temp = parent.parentNode.removeChild(parent);
+       	console.log(temp);
 	}
 }
