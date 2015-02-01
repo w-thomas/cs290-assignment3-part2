@@ -1,3 +1,5 @@
+var userFavorites = null;
+
 function getGists() {
 	/*AJAX call and parse response*/
 	var req = new XMLHttpRequest();
@@ -66,13 +68,21 @@ function favButtons(status) {
 	}
 }
 
+function Favorites() {
+	this.savedLinks = [];
+	this.addLinks = function(linktoSave) {
+		this.savedLinks.push(linktoSave);
+		localStorage.setItem('myFavorites', userFavorites)
+	};
+}
 /*elem is the element being passed in. Direction is 0 if item is being saved
   and 1 if item is being deleted from favorites*/
 function favoriteSwap(elem, direction) {
 	if(direction == 0) {
-		console.log(elem);
 		var parent = elem.parentNode;
        	var temp = parent.parentNode.removeChild(parent);
        	console.log(temp);
+       	var url = temp.getElementsByTagName("a")[0].href;
+       	console.log(url);
 	}
 }
