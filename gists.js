@@ -54,6 +54,7 @@ function favButtons(status) {
 		
 		/*button gets different properites if it in favorites or now*/
 		if(status == 0) {
+			//but.setAttribute("onclick", "favoriteSwap(this, 0)");
 			but.setAttribute("onclick", "favoriteSwap(this, 0)");
 			var t = document.createTextNode("Save to Favorites");
 		} 
@@ -68,21 +69,33 @@ function favButtons(status) {
 	}
 }
 
-function Favorites() {
-	this.savedLinks = [];
-	this.addLinks = function(linktoSave) {
-		this.savedLinks.push(linktoSave);
-		localStorage.setItem('myFavorites', userFavorites)
-	};
-}
 /*elem is the element being passed in. Direction is 0 if item is being saved
   and 1 if item is being deleted from favorites*/
 function favoriteSwap(elem, direction) {
 	if(direction == 0) {
 		var parent = elem.parentNode;
        	var temp = parent.parentNode.removeChild(parent);
-       	console.log(temp);
        	var url = temp.getElementsByTagName("a")[0].href;
-       	console.log(url);
+       	saveLink(url);
+	}
+}
+
+
+
+function saveLink(link) {
+	console.log(link);
+	userFavorites.gistLinks.push(link);
+	console.log(userFavorites);
+	localStorage.setItem('myFavorites', JSON.stringify(userFavorites));
+}
+
+window.onload = function() {
+	var settingStr = localStorage.getItem('myFavorites');
+	if(settingStr === null) {
+		userFavorites = {'gistLinks': []};
+		localStorage.setItem('myFavorites', JSON.stringify(userFavorites));
+	}
+	else {
+		userFavorites = JSON.parse(settingStr);
 	}
 }
