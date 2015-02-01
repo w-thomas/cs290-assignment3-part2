@@ -8,6 +8,7 @@ function getGists() {
 			var results = JSON.parse(this.responseText)
 			console.log(results[0].url);
 			createGistList(results);
+			//favButtons(results);
 		}
 	};
 	req.open('GET', 'https://api.github.com/gists');
@@ -32,8 +33,29 @@ function createGistList(gArray) {
 		else
 		a.innerHTML = gArray[i].description;
 
+		var li = document.createElement("li");
+		var but = document.createElement("BUTTON");
+		but.setAttribute("onclick", "addToFavorites(this)");
+		var t = document.createTextNode("Save to Favorites");
+		but.appendChild(t);
+
 		li.appendChild(a);
+		li.appendChild(but);
 		ul.appendChild(li);
 		div.appendChild(ul);
 		}
+}
+
+function favButtons(gArray) {
+	var temp = document.getElementsbyTagName("ul");
+
+	for(var i = 0; i < gArray.length; i++) {
+		var li = document.createElement("li");
+		var but = document.createElement("BUTTON");
+		but.setAttribute("onclick", "addToFavorites(this)");
+		var t = document.createTextNode("Save to Favorites");
+		but.appendChild(t);
+		li.appendChild(but);
+		temp[i].appendChild(li);
+	}
 }
