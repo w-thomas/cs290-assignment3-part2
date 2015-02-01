@@ -56,39 +56,37 @@ function favButtons(status) {
 			var li = document.createElement("li");
 			var but = document.createElement("BUTTON");
 			but.style.marginLeft = '15px';
-			but.setAttribute("onclick", "favoriteSwap(this, 0)");
+			but.setAttribute("onclick", "addToFavorites(this, 0)");
 			var t = document.createTextNode("Save to Favorites");
 			but.appendChild(t);
 			temp[i].getElementsByTagName("li")[0].appendChild(but);
 		}
 	} 
 	else {
-		var outDiv = document.getElementById("output");
+		var outDiv = document.getElementById("saved");
 		temp = outDiv.getElementsByTagName("ul");
 
 		for(var i = 0; i < temp.length; i++) {
 		var li = document.createElement("li");
 		var but = document.createElement("BUTTON");
-		but.setAttribute("onclick", "favoriteSwap(this, 1)");
+		but.style.marginLeft = '15px';
+		but.setAttribute("onclick", "removeFromFavorites(this, 1)");
 		var t = document.createTextNode("Remove from Favorites");
 		but.appendChild(t);
 		temp[i].getElementsByTagName("li")[0].appendChild(but);
 		}
 	}
-
 }
 
 /*elem is the element being passed in. Direction is 0 if item is being saved
   and 1 if item is being deleted from favorites*/
-function favoriteSwap(elem, direction) {
-	if(direction == 0) {
-		var parent = elem.parentNode;
-       	var temp = parent.parentNode.removeChild(parent);
-       	var url = temp.getElementsByTagName("a")[0].href;
-       	var anchorText = temp.getElementsByTagName("a")[0].innerHTML;
-       	var params = new CreateLink(url, anchorText);
-       	saveLink(params);
-	}
+function addToFavorites(elem) {
+	var parent = elem.parentNode;
+    var temp = parent.parentNode.removeChild(parent);
+    var url = temp.getElementsByTagName("a")[0].href;
+    var anchorText = temp.getElementsByTagName("a")[0].innerHTML;
+    var params = new CreateLink(url, anchorText);
+    saveLink(params);
 }
 
 function CreateLink(url, description) {
@@ -103,6 +101,24 @@ function saveLink(link) {
 	console.log(userFavorites);
 	printFavorites(userFavorites);
 	localStorage.setItem('myFavorites', JSON.stringify(userFavorites));
+}
+
+function removeFromFavorites(elem) {
+	var parent = elem.parentNode;
+    var temp = parent.parentNode.removeChild(parent);
+    var url = temp.getElementsByTagName("a")[0].href;
+
+    console.log(url);
+
+    for(var i = 0; i < userFavorites.gistLinks.length; i++) {
+    	console.log(userFavorites.gistLinks[i].url);
+    	if(userFavorites.gistLinks[i].url === url) {
+    		
+    		userFavorites.gistLinks.splice(i, 1);
+    	}
+    }
+    localStorage.setItem('myFavorites', JSON.stringify(userFavorites));
+    printFavorites(userFavorites);
 }
 
 function printFavorites(userFavorites) {
@@ -120,6 +136,8 @@ function printFavorites(userFavorites) {
 		ul.appendChild(li);
 		div.appendChild(ul);
 	}	
+
+	favButtons(1);
 }
 
 window.onload = function() {
