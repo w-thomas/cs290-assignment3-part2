@@ -3,25 +3,36 @@ var userFavorites = null;
 function getGists() {
 	/*AJAX call and parse response*/
 	var req = new XMLHttpRequest();
+	var pages;
 	if(!req) {
 		throw 'Unable to create HttpRequest.';
 	}
+	pages = document.getElementById('pageNumber').value;
+	console.log(pages);
+
+	if(pages > 5){
+		pages = 5;
+	}
+
+	for(var i = 0; i < pages; i++){
+	
 	req.onreadystatechange = function() {
 		if (this.readyState === 4) {
 			var results = JSON.parse(this.responseText)
-			/*Create list of results*/
+			// Create list of results
 			createGistList(results);
 			favButtons(0);
 		}
 	};
-	req.open('GET', 'https://api.github.com/gists');
+	req.open('GET', 'https://api.github.com/gists?page='+(i+1));
 	req.send();
+	}
 }
 
 function createGistList(gArray) {
 	/*reference empty div*/
 	var div = document.getElementById('output');
-	div.innerHTML = '';
+	//div.innerHTML = '';
 	/*Generate UL elements. Each LI has anchor with gist url and description used as text*/
 	for(var i = 0; i < gArray.length; i++) {
 
