@@ -31,32 +31,42 @@ function getGists() {
 function createGistList(gArray) {
 	/*reference empty div*/
 	var div = document.getElementById('output');
+	
 	//div.innerHTML = '';
 	/*Generate UL elements. Each LI has anchor with gist url and description used as text*/
 	for (var i = 0; i < gArray.length; i++) {
-		/*Generate lists for each entry and append to div 'output'*/
-		var ul = document.createElement('ul');
-		var li = document.createElement('li');
-		var a = document.createElement('a');
-		var link = gArray[i].url;
-		a.setAttribute('href', link);
-		/*If no description is provided in Gist*/
-		if (!gArray[i].description) {
-			a.innerHTML = 'No description';
+		/*Inner loop filters out results already saved in favorites.*/
+		var match = false;
+		for(var j = 0; j < userFavorites.gistLinks.length; j++) {
+			if(userFavorites.gistLinks[j].url === gArray[i].url){
+				match = true;
+			}
 		}
-		else
-		a.innerHTML = gArray[i].description;
-		li.appendChild(a);
-		ul.appendChild(li);
-		/*Generate button and append it to the list item*/
-		var but = document.createElement('BUTTON');
-		but.style.marginLeft = '15px';
-		but.setAttribute('onclick', 'addToFavorites(this, 0)');
-		var t = document.createTextNode('Save to Favorites');
-		but.appendChild(t);
-		li.appendChild(but);
-		div.appendChild(ul);
+		if(match != true) {
+			/*Generate lists for each entry and append to div 'output'*/
+			var ul = document.createElement('ul');
+			var li = document.createElement('li');
+			var a = document.createElement('a');
+			var link = gArray[i].url;
+			a.setAttribute('href', link);
+			/*If no description is provided in Gist*/
+			if (!gArray[i].description) {
+				a.innerHTML = 'No description';
+			}
+			else
+				a.innerHTML = gArray[i].description;
+				li.appendChild(a);
+				ul.appendChild(li);
+				/*Generate button and append it to the list item*/
+				var but = document.createElement('BUTTON');
+				but.style.marginLeft = '15px';
+				but.setAttribute('onclick', 'addToFavorites(this, 0)');
+				var t = document.createTextNode('Save to Favorites');
+				but.appendChild(t);
+				li.appendChild(but);
+				div.appendChild(ul);
 		}
+	}
 }
 
 /*adds buttons to favorites*/
@@ -110,7 +120,6 @@ function removeFromFavorites(elem) {
 
     for (var i = 0; i < userFavorites.gistLinks.length; i++) {
     	if (userFavorites.gistLinks[i].url === url) {
-
     		userFavorites.gistLinks.splice(i, 1);
     	}
     }
@@ -135,7 +144,6 @@ function printFavorites(userFavorites) {
 		ul.appendChild(li);
 		div.appendChild(ul);
 	}
-
 	favButtons();
 }
 
