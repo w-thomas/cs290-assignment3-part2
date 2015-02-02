@@ -5,7 +5,6 @@ function getGists() {
 	var pages;
 
 	pages = document.getElementById('pageNumber').value;
-	console.log(pages);
 
 	if (pages > 5) {
 		pages = 5;
@@ -62,7 +61,7 @@ function createGistList(gArray) {
 
 /*adds buttons to favorites*/
 
-function favButtons(status) {
+function favButtons() {
 	/*button gets different properites if it in favorites or now*/
 	var temp;
 	var Div = document.getElementById('saved');
@@ -97,9 +96,7 @@ function CreateLink(url, description) {
 
 /*I borrowed ideas in these functions from the lectures*/
 function saveLink(link) {
-	console.log(link);
 	userFavorites.gistLinks.push(link);
-	console.log(userFavorites);
 	printFavorites(userFavorites);
 	localStorage.setItem('myFavorites', JSON.stringify(userFavorites));
 }
@@ -111,10 +108,7 @@ function removeFromFavorites(elem) {
     var temp = parent.parentNode.removeChild(parent);
     var url = temp.getElementsByTagName('a')[0].href;
 
-    console.log(url);
-
     for (var i = 0; i < userFavorites.gistLinks.length; i++) {
-    	console.log(userFavorites.gistLinks[i].url);
     	if (userFavorites.gistLinks[i].url === url) {
 
     		userFavorites.gistLinks.splice(i, 1);
@@ -142,7 +136,7 @@ function printFavorites(userFavorites) {
 		div.appendChild(ul);
 	}
 
-	favButtons(1);
+	favButtons();
 }
 
 /*Recreate fav list on reload by pulling local data*/
@@ -155,6 +149,5 @@ window.onload = function() {
 	else {
 		userFavorites = JSON.parse(settingStr);
 	}
-
 	printFavorites(userFavorites);
 };
