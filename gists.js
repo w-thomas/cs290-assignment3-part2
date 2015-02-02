@@ -2,11 +2,11 @@ var userFavorites = null;
 
 function getGists() {
 	/*AJAX call and parse response*/
-	var req = new XMLHttpRequest();
+	// var req = new XMLHttpRequest();
 	var pages;
-	if(!req) {
-		throw 'Unable to create HttpRequest.';
-	}
+	// if(!req) {
+	// 	throw 'Unable to create HttpRequest.';
+	// }
 	pages = document.getElementById('pageNumber').value;
 	console.log(pages);
 
@@ -15,18 +15,20 @@ function getGists() {
 	}
 
 	for(var i = 0; i < pages; i++){
+		var req = new XMLHttpRequest();
 	
 	req.onreadystatechange = function() {
 		if (this.readyState === 4) {
 			var results = JSON.parse(this.responseText)
 			// Create list of results
 			createGistList(results);
-			favButtons(0);
+			
 		}
 	};
 	req.open('GET', 'https://api.github.com/gists?page='+(i+1));
 	req.send();
 	}
+	favButtons(0);
 }
 
 function createGistList(gArray) {
