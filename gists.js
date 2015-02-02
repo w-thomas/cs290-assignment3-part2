@@ -2,11 +2,8 @@ var userFavorites = null;
 
 function getGists() {
 	/*AJAX call and parse response*/
-	// var req = new XMLHttpRequest();
 	var pages;
-	// if(!req) {
-	// 	throw 'Unable to create HttpRequest.';
-	// }
+
 	pages = document.getElementById('pageNumber').value;
 	console.log(pages);
 
@@ -15,20 +12,21 @@ function getGists() {
 	}
 
 	for(var i = 0; i < pages; i++){
-		var req = new XMLHttpRequest();
-	
+	var req = new XMLHttpRequest();
+	if(!req) {
+	throw 'Unable to create HttpRequest.';
+	}
+
 	req.onreadystatechange = function() {
 		if (this.readyState === 4) {
 			var results = JSON.parse(this.responseText)
 			// Create list of results
 			createGistList(results);
-			
 		}
 	};
 	req.open('GET', 'https://api.github.com/gists?page='+(i+1));
 	req.send();
 	}
-	favButtons(0);
 }
 
 function createGistList(gArray) {
@@ -37,13 +35,13 @@ function createGistList(gArray) {
 	//div.innerHTML = '';
 	/*Generate UL elements. Each LI has anchor with gist url and description used as text*/
 	for(var i = 0; i < gArray.length; i++) {
-
+		/*Generate lists for each entry and append to div 'output'*/
 		var ul = document.createElement("ul");
 		var li = document.createElement("li");
 		var a = document.createElement("a");
 		var link = gArray[i].url;
 		a.setAttribute("href", link);
-
+		/*If no description is provided in Gist*/
 		if(!gArray[i].description) {
 			a.innerHTML = "No description";
 		}
@@ -51,35 +49,26 @@ function createGistList(gArray) {
 		a.innerHTML = gArray[i].description;
 		li.appendChild(a);
 		ul.appendChild(li);
+		/*Generate button and append it to the list item*/
+		var but = document.createElement("BUTTON");
+		but.style.marginLeft = '15px';
+		but.setAttribute("onclick", "addToFavorites(this, 0)");
+		var t = document.createTextNode("Save to Favorites");
+		but.appendChild(t);
+		li.appendChild(but);
 		div.appendChild(ul);
 		}
 }
 
-/*Status is an integer, if 0 the item is generated to search results
-  if 1 the item is generated to favorites list*/
+/*adds buttons to favorites*/
+
 function favButtons(status) {	
 	/*button gets different properites if it in favorites or now*/
 	var temp;
-	if(status == 0) {
-		var outDiv = document.getElementById("output");
-		var temp = outDiv.getElementsByTagName("ul");
+	var Div = document.getElementById("saved");
+	temp = Div.getElementsByTagName("ul");
 
-		/*Create button and append to each item*/
-		for(var i = 0; i < temp.length; i++) {
-			var li = document.createElement("li");
-			var but = document.createElement("BUTTON");
-			but.style.marginLeft = '15px';
-			but.setAttribute("onclick", "addToFavorites(this, 0)");
-			var t = document.createTextNode("Save to Favorites");
-			but.appendChild(t);
-			temp[i].getElementsByTagName("li")[0].appendChild(but);
-		}
-	} 
-	else {
-		var outDiv = document.getElementById("saved");
-		temp = outDiv.getElementsByTagName("ul");
-
-		for(var i = 0; i < temp.length; i++) {
+	for(var i = 0; i < temp.length; i++) {
 		var li = document.createElement("li");
 		var but = document.createElement("BUTTON");
 		but.style.marginLeft = '15px';
@@ -87,7 +76,6 @@ function favButtons(status) {
 		var t = document.createTextNode("Remove from Favorites");
 		but.appendChild(t);
 		temp[i].getElementsByTagName("li")[0].appendChild(but);
-		}
 	}
 }
 
@@ -116,6 +104,8 @@ function saveLink(link) {
 	localStorage.setItem('myFavorites', JSON.stringify(userFavorites));
 }
 
+/*removes node from html, and then splices that matching item out of the 
+favorites array*/
 function removeFromFavorites(elem) {
 	var parent = elem.parentNode;
     var temp = parent.parentNode.removeChild(parent);
@@ -134,6 +124,8 @@ function removeFromFavorites(elem) {
     printFavorites(userFavorites);
 }
 
+/*Similar approach here. I dereference my favorites object and 
+construct list items*/
 function printFavorites(userFavorites) {
 	var div = document.getElementById('saved');
 	div.innerHTML = '';
@@ -153,6 +145,7 @@ function printFavorites(userFavorites) {
 	favButtons(1);
 }
 
+/*Recreate fav list on reload by pulling local data*/
 window.onload = function() {
 	var settingStr = localStorage.getItem('myFavorites');
 	if(settingStr === null) {
